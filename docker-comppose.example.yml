@@ -1,0 +1,37 @@
+version: "3.5"
+
+services:
+
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./config.json:/app/config/production.json
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+  assistent:
+    build: ./nginx-manager-assistent
+    depends_on:
+      - app
+    # For dev, run "npm run dev" remove or comment for production build
+    # entrypoint: "npm run dev"
+    environment:
+      username: 'git-oss@xantios.nl'
+      password: 'superdupersecret'
+    volumes:
+      - ./nginx-manager-assistent:/usr/src/app
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  db:
+    image: 'jc21/mariadb-aria:10.4'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'npm'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: 'npm'
+    volumes:
+      - ./data/mysql:/var/lib/mysql
