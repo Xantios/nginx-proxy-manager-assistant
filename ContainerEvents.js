@@ -11,8 +11,16 @@ class ContainerEvents {
             .getContainer(msg.id)
             .inspect((e, data) => {
 
-                // Extract Vhost and Vhost_port from env
-                const vhost = data.Config.Env.find(item => item.split('=')[0] == "VHOST").split('=')[1] || '';
+                // Extract Vhost
+                let vhost = data.Config.Env.find(item => item.split('=')[0] == "VHOST") || null;
+
+                if(!vhost) {
+                    return false;
+                }
+
+                vhost = vhost.split('=')[1] || '';
+
+                // Extract vhost_port if available
                 const vhost_port = data.Config.Env.find(item => item.split('=')[0] == "VHOST_PORT") || null;
 
                 // Get IP and port-map

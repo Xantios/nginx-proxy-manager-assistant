@@ -8,3 +8,8 @@ The jc21 manager has a great interface and already does most of the heavy liftin
 ## Quickstart
 
 Copy/paste `docker-compose.example.yml` to `docker-compose.yml` modify to your likings and run `docker-compose up`
+
+## Got it running, now what?
+
+Run a container with the environment variable `VHOST` set to whatever you like. 
+`docker run -it -p 1337:80 -e VHOST=proxy.example.com httpd`
