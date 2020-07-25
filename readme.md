@@ -11,10 +11,10 @@ Copy/paste `docker-compose.example.yml` to `docker-compose.yml` modify to your l
 
 ## Got it running, now what?
 
-Run a container with the environment variable `VHOST` set to whatever you like. 
-`docker run -it -p 1337:80 -e VHOST=proxy.example.com httpd`
+Run a container with the environment variable `VIRTUAL_HOST` set to whatever you like. 
+`docker run -it -p 1337:80 -e VIRTUAL_HOST=proxy.example.com -e VIRTUAL_PORT=1337 httpd`
 
-The assistant will forward to the left port (`1337` of `1337:80`) to route via `VHOST`, or set `VHOST_PORT` to manually configure the forwarded port.
+The assistant will forward to the left port (`1337` of `1337:80`) to route via `VIRTUAL_HOST`, or set `VIRTUAL_PORT` to manually configure the forwarded port.
 
 ## Rebuild
 

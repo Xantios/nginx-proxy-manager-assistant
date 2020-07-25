@@ -12,7 +12,7 @@ class ContainerEvents {
             .inspect((e, data) => {
 
                 // Extract Vhost
-                let vhost = data.Config.Env.find(item => item.split('=')[0] == "VHOST") || null;
+                let vhost = data.Config.Env.find(item => item.split('=')[0] == "VIRTUAL_HOST") || null;
 
                 if(!vhost) {
                     return false;
@@ -21,7 +21,7 @@ class ContainerEvents {
                 vhost = vhost.split('=')[1] || '';
 
                 // Extract vhost_port if available
-                const vhost_port = data.Config.Env.find(item => item.split('=')[0] == "VHOST_PORT") || null;
+                const vhost_port = data.Config.Env.find(item => item.split('=')[0] == "VIRTUAL_PORT") || null;
 
                 // Get IP and port-map
                 const ip = data.NetworkSettings.IPAddress ?? '';
