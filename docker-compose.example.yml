@@ -23,7 +23,8 @@ services:
       - ./data/mysql:/var/lib/mysql
 
   assistant:
-    build: .
+   # build: .
+    image: 'addbee/nginx-proxy-manager-assistant:latest'
     depends_on:
       - app
     # For dev, run "npm run dev" remove or comment for production build
