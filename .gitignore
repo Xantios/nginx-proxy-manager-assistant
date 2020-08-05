@@ -1,1 +1,5 @@
 app/node_modules/
+data/
+letsencrypt/
+docker-compose.dev.yml
+config.json

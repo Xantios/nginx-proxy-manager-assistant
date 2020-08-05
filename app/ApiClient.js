@@ -31,7 +31,7 @@ class ApiClient {
             return false;
         }
         catch(e) {
-            console.log('Healthcheck failed => ',e);
+            // console.log('Healthcheck failed => ',e.message);
             this.#health = false;
             return false;
         }
@@ -65,7 +65,7 @@ class ApiClient {
             console.log('Token renewed successfully, new expiration date is '+this.#expires.format());
         })
         .catch(e => {
-            console.error('Cant authenticate! please check credentials in environment',e);
+            console.error('Cant authenticate! please check credentials in environment');
         });
     }
 

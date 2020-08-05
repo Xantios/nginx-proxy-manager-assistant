@@ -22,7 +22,8 @@ class EventHandler {
 
     messageHandler(msg) {
 
-        const type = msg.Type+"_"+msg.Action;
+        const action = msg.Action.split(':')[0];
+        const type = msg.Type+"_"+action;
 
         switch(type) {
 
@@ -35,12 +36,22 @@ class EventHandler {
             case 'network_create': 
                 this.networkEvents.create(msg);
                 break;
-            case 'network_remove':
+            case 'network_destroy':
                 this.networkEvents.remove(msg);
+                break;
+            case 'network_connect': 
+                this.networkEvents.connected(msg);
+                break;
+            case 'container_exec_create':
+            case 'container_exec_start':
+            case 'container_exec_die':
+                break;
+            default:
+                console.log('Unknown event: ['+type+']');
                 break;
         }
 
     }
 };
 
-export default EventHandler;
+export default EventHandler
