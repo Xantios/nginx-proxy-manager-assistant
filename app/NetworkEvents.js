@@ -28,6 +28,8 @@ class NetworkEvents {
 
     async networkSetup() {
 
+        console.log('==> Running network setup...');
+
         this.parent = await this.findParent();
         this.exclude = this.parent.Labels['com.docker.compose.project']+"_default";
 
@@ -40,14 +42,21 @@ class NetworkEvents {
                 const network_id = this.parent.NetworkSettings.Networks[name].NetworkID;
                 this.disconnect(this.parent.Id,network_id);
             });
+
+        networks.map(async _item => {
+            let item = await _item.inspect();
+
+            if(item.Name==='bridge') {
+                await this.connect(this.parent.Id,item.Id);
+            }
+
+        });
+
     }
 
     async all() {
-
         let networks = await this.docker.listNetworks();
-        let items = networks.map(item => this.docker.getNetwork(item.Id));
-
-        return items;
+        return networks.map(item => this.docker.getNetwork(item.Id));
     }
 
     async findParent() {
@@ -102,16 +111,29 @@ class NetworkEvents {
         await this.connect(container_id,network_id);
     }
 
-    async connect(container,network_id) {
+    async connect(container_id,network_id) {
+
+        /**
+         * Collect data 
+         */
+        const network = await this.docker.getNetwork(network_id);
+        const container = await this.docker.getContainer(container_id);
+
+        const networkDetails = await network.inspect();
+        const containerDetails = await container.inspect();
+
+        /** Try to connect */
         try {
-            const network = await this.docker.getNetwork(network_id);
+            
+            console.log('==> Connecting '+containerDetails.Name+" to "+networkDetails.Name);
+
             const ret = await network.connect({
-                Container: container
+                Container: container_id
             });
 
             return ret;
         } catch(e) {
-            console.log('Oops! ',e);
+            console.log('Can not connect container '+containerDetails.Name+' to '+networkDetails.Name,e);
         }
     }
 

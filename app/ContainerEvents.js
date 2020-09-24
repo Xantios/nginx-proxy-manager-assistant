@@ -23,8 +23,18 @@ class ContainerEvents {
                 // Extract vhost_port if available
                 const vhost_port = data.Config.Env.find(item => item.split('=')[0] == "VIRTUAL_PORT") || null;
 
-                // Get IP and port-map
-                const ip = data.NetworkSettings.IPAddress ?? '';
+                // Extract IP from container
+                let ip = data.NetworkSettings.IPAddress ?? '';
+
+                // Extract IP from composition if available
+                if(ip==='') {
+                    let compositionNetworkLabel = Object.keys(data.NetworkSettings.Networks)[0];
+                    if(compositionNetworkLabel) {
+                        ip = data.NetworkSettings.Networks[compositionNetworkLabel].IPAddress || '';
+                    }
+                }
+
+                // Extract port to map
                 const ports = Object.keys(data.NetworkSettings.Ports).map(item => parseInt(item.split('/')[0]));
 
                 // use Vhost port if defined, else use first port in map
