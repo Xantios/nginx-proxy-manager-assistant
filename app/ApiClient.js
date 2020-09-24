@@ -71,23 +71,59 @@ class ApiClient {
 
     createVhost(id,name,target,port=80,secure=false) {
 
+        /**
+         * {
+         *  "domain_names":["cokemaster.xantios.nl"],
+         *  "forward_scheme":"http",
+         * "forward_host":"10.13.37.254",
+         * "forward_port":1337,
+         * "access_list_id":"0",
+         * "certificate_id":"new",
+         * "ssl_forced":true,
+         * "meta":{
+         *  "letsencrypt_email":"info@xantios.nl",
+         *  "letsencrypt_agree":true
+         * },
+         * "advanced_config":"",
+         * "locations":[],
+         * "block_exploits":false,
+         * "caching_enabled":false,
+         * "allow_websocket_upgrade":false,
+         * "http2_support":false,
+         * "hsts_enabled":false,
+         * "hsts_subdomains":false
+         * }
+         */
+
         const metadata = {
             automagic:"true",
             name: name,
-            id: id
+            id: id,
+            secure: secure
         };
 
-        const data = {
+        let data = {
             domain_names: [ name ],
-            forward_scheme: (secure) ? 'https' : 'http',
+            forward_scheme: 'http',
             forward_host: target,
             forward_port: port,
-            advanced_config: "# [metadata]=["+JSON.stringify(metadata)+"]"
+            advanced_config: "# [metadata]=["+JSON.stringify(metadata)+"]",
+            meta: {}
         };
+
+        if(secure) {
+            
+            data.certificate_id = "new";
+            data.ssl_forced = secure;
+
+            data.meta.letsencrypt_email = process.env['le_email'];
+            data.meta.letsencrypt_agree = true;
+        }
 
         this.axios.post('nginx/proxy-hosts',data)
             .then(resp => {
                 console.log('Created vhost!');
+                console.log('==> ',data);
             })
             .catch(e => {
                 // console.error(e);

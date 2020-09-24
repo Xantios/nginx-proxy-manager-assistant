@@ -32,6 +32,7 @@ services:
     environment:
       username: 'nginx-proxy-manager@example.com' # your npm login
       password: 'superdupersecret' # npm password
+      le_email: 'letsencrypt@example.com'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 

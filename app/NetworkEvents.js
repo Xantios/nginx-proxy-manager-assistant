@@ -108,7 +108,11 @@ class NetworkEvents {
         if(!vhost) return false;
         if(network.Name == "host" || network.Name == "bridge" || network.name == this.exclude) return false;
 
-        await this.connect(container_id,network_id);
+        //
+        // await this.connect(container_id,network_id);
+
+        // Connect the parent container to the new network
+        await this.connect(this.parent.Id,network_id);
     }
 
     async connect(container_id,network_id) {
