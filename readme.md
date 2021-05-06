@@ -16,6 +16,8 @@ Run a container with the environment variable `VIRTUAL_HOST` set to whatever you
 
 The assistant will forward to the left port (`1337` of `1337:80`) to route via `VIRTUAL_HOST`, or set `VIRTUAL_PORT` to manually configure the forwarded port.
 
+If you need to generate SSL with Let's Encrypt, remember to add `GEN_CERT=true`.
+
 ## Rebuild
 
 `docker-compose build --no-cache`
