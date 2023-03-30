@@ -2,20 +2,22 @@ version: "3.5"
 
 services:
   app:
-    restart: always
-    image: 'jc21/nginx-proxy-manager:latest'
+    # image: 'jc21/nginx-proxy-manager:2.9.0'
+    # Sorry for the esoteric fuckery. but this PR has *.domain.bla fix in it.
+    image: 'jc21/nginx-proxy-manager:github-pr-1181' 
     ports:
       - '80:80'
       - '81:81'
       - '443:443'
+    restart: always 
     volumes:
       - ./config.json:/app/config/production.json
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
       
   db:
-    restart: always
     image: 'jc21/mariadb-aria:10.4'
+    restart: always 
     environment:
       MYSQL_ROOT_PASSWORD: 'npm'
       MYSQL_DATABASE: 'npm'
@@ -25,17 +27,16 @@ services:
       - ./data/mysql:/var/lib/mysql
 
   assistant:
-     restart: always
-   # build: .
-    image: 'addbee/nginx-proxy-manager-assistant:latest'
+    build: .
+    restart: always 
     depends_on:
       - app
-    # For dev, run "npm run dev" remove or comment for production build
-    # entrypoint: "npm run dev"
+    entrypoint: "npm run dev"
     environment:
-      username: 'nginx-proxy-manager@example.com' # your npm login
-      password: 'superdupersecret' # npm password
-      le_email: 'letsencrypt@example.com'
+      username: 'info@xantios.nl' # your npm login
+      password: 'xaphn42X' # npm password
+      le_email: 'letsencrypt@xantios.nl'
     volumes:
+      - ./app:/usr/src/app
       - /var/run/docker.sock:/var/run/docker.sock
 
